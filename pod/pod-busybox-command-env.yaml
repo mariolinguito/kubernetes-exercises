@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox-dev
+spec:
+  containers:
+  - name: busybox-dev-container
+    image: busybox
+    command: ["/bin/sh"]
+    args: ["-c", "env"]
+  restartPolicy: Never

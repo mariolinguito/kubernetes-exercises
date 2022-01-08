@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+    - name: web
+      image: nginx
+      imagePullPolicy: IfNotPresent
+      securityContext:
+        capabilities:
+          add: ["NET_ADMIN", "SYS_TIME"] # https://man7.org/linux/man-pages/man7/capabilities.7.html
+      ports:
+        - name: web
+          containerPort: 80
+          protocol: TCP

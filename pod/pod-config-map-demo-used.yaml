@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: configmap-cmvolume-pod
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      command: ["ls"]
+      args: ["/etc/lala"]
+      volumeMounts:
+      - name: config
+        mountPath: "/etc/lala"
+        readOnly: true
+  volumes:
+    # You set volumes at the Pod level, then mount them into containers inside that Pod
+    - name: config
+      configMap:
+        # Provide the name of the ConfigMap you want to mount.
+        # We created this config-map previously using another yaml.
+        name: cmvolume-demo
+        # An array of keys from the ConfigMap to create as files
+        items:
+        - key: "var8"
+          path: "var8"
+        - key: "var9"
+          path: "var9"

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: static-web-lvss
+  labels:
+    role: my-role
+spec:
+  containers:
+    - name: web
+      image: nginx
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        exec:
+          command:
+          - ls
+        initialDelaySeconds: 5
+        periodSeconds: 5
+      ports:
+        - name: web
+          containerPort: 80
+          protocol: TCP

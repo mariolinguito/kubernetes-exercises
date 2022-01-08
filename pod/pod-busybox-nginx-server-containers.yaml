@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-busybox-example
+spec:
+  # We have one container with NGINX that using port 80.
+  # Plus, it use an emptyDir volume called ngx-volume
+  # mounted on /usr/share/nginx/html.
+  containers:
+    - name: web
+      image: nginx
+      volumeMounts:
+      - mountPath: /usr/share/nginx/html
+        name: ngx-volume
+      ports:
+        - name: web
+          containerPort: 80
+          protocol: TCP
+  # The initContainers are specialised containers that
+  # run before the pod containers. In this example, the
+  # container that uses busybox image will run before 
+  # the container with nginx.
+  #
+  # Also in this case the container use a volume mounted
+  # on /work-dir.
+  initContainers:
+  - args:
+    - /bin/sh
+    - -c
+    - wget -O /work-dir/index.html http://neverssl.com/online
+    image: busybox
+    name: busybox
+    volumeMounts:
+    - name: bbx-volume
+      mountPath: /work-dir
+  volumes:
+  - name: ngx-volume
+    emptyDir: {}
+  - name: bbx-volume
+    emptyDir: {}
+
+ # An emptyDir volume is first created when a Pod is
+ # assigned to a node, and exists as long as that Pod 
+ # is running on that node. When a Pod is removed from
+ # a node for any reason, the data in the emptyDir is
+ # deleted permanently.

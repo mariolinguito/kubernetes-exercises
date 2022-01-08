@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tls-example-ingress
+spec:
+  tls:
+  - hosts:
+      - https-example.foo.com  ## The hosts in tls should match with the hosts of the rules.
+    secretName: testsecret-tls ## Should match the name of the secret defined.
+  rules:
+  - host: https-example.foo.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: service1
+            port:
+              number: 80
+
+# The secret should apprear like this:
+#
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: testsecret-tls
+#   namespace: default
+# data:
+#   tls.crt: base64 encoded cert
+#   tls.key: base64 encoded key
+# type: kubernetes.io/tls
